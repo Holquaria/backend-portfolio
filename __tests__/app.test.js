@@ -66,7 +66,6 @@ describe('GET /api/articles', () => {
     .expect(200)
     .then(({ body }) => {
       const { articles } = body;
-      console.log(articles)
       expect(articles[0].comment_count).toBe('2')
       expect(articles[5].comment_count).toBe('11')
     });
