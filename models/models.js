@@ -16,7 +16,8 @@ exports.selectArticles = () => {
 exports.selectCommentsByArticle = (id) => {
     return db.query(`
     SELECT author, comment_id, created_at, votes, body FROM comments
-    WHERE article_id = $1`, [id]).then(({ rows }) => {
+    WHERE article_id = $1
+    ORDER BY created_at DESC`, [id]).then(({ rows }) => {
         return rows
     })
 }

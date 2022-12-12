@@ -105,4 +105,13 @@ describe('GET /api/articles/:article_id/comments', () => {
       });
     });
   })
+  test('comments should be sorted by most recent', () => {
+    return request(app)
+    .get("/api/articles/1/comments")
+    .expect(200)
+    .then(({ body }) => {
+      const { comments } = body;
+      expect(comments).toBeSortedBy('created_at', { descending: true })
+    });
+  })
 })
