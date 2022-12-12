@@ -8,6 +8,12 @@ exports.handleAbsentId = (err, req, res, next) => {
     } else next(err)
 }
 
+exports.handleInvalidId = (err, req, res, next) => {
+    if (err.code === '22P02') {
+        res.status(400).send({ message: 'invalid id data type' })
+    }
+}
+
 exports.handle500Error = (err, req, res, next) => {
     console.log(err);
     res.status(500).send({ message: "Internal Server Error" });

@@ -55,6 +55,15 @@ describe('GET /api/articles/:article_id', () => {
       expect(message).toBe('article id not found')
     });
   })
+  test('should return a 400 when id is not a valid data type', () => {
+    return request(app)
+    .get("/api/articles/pug")
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('invalid id data type')
+    });
+  })
 })
 
 describe("Errors", () => {
