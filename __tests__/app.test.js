@@ -83,3 +83,26 @@ describe("Errors", () => {
       });
   });
 });
+
+describe('GET /api/articles/:article_id/comments', () => {
+  test('should return all comments for the given article', () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then(({ body }) => {
+      const { comments } = body;
+      expect(comments).toHaveLength(12)
+      comments.forEach((comment) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            comment_id: expect.any(Number),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            body: expect.any(String)
+          })
+        );
+      });
+    });
+  })
+})
