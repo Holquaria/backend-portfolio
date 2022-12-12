@@ -12,6 +12,8 @@ exports.getTopics = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
     selectArticles().then((articles) => {
         res.status(200).send({ articles })
+    }).catch((err) => {
+        next(err)
     })
 }
 
@@ -19,5 +21,7 @@ exports.getCommentsByArticle = (req, res, next) => {
     const id = req.params.article_id
     selectCommentsByArticle(id).then((comments) => {
         res.status(200).send({ comments })
+    }).catch((err) => {
+        next(err)
     })
 }

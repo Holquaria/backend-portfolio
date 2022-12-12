@@ -114,4 +114,22 @@ describe('GET /api/articles/:article_id/comments', () => {
       expect(comments).toBeSortedBy('created_at', { descending: true })
     });
   })
+  // test('should return a 404 when id is valid but not found', () => {
+  //   return request(app)
+  //   .get("/api/articles/55/comments")
+  //   .expect(404)
+  //   .then(({ body }) => {
+  //     const { message } = body;
+  //     expect(message).toBe('article id not found')
+  //   });
+  // })
+  // test('should return a 400 when id is not a valid data type', () => {
+  //   return request(app)
+  //   .get("/api/articles/pug/comments")
+  //   .expect(400)
+  //   .then(({ body }) => {
+  //     const { message } = body;
+  //     expect(message).toBe('invalid id data type')
+  //   });
+  // })
 })
