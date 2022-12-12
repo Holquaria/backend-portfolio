@@ -87,11 +87,11 @@ describe("Errors", () => {
 describe('GET /api/articles/:article_id/comments', () => {
   test('should return all comments for the given article', () => {
     return request(app)
-    .get("/api/articles")
+    .get("/api/articles/1/comments")
     .expect(200)
     .then(({ body }) => {
       const { comments } = body;
-      expect(comments).toHaveLength(12)
+      expect(comments).toHaveLength(11)
       comments.forEach((comment) => {
         expect(comment).toEqual(
           expect.objectContaining({

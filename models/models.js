@@ -12,3 +12,11 @@ exports.selectArticles = () => {
     GROUP BY articles.author, articles.title, articles.article_id, articles.created_at, articles.votes, comments.article_id
     ORDER BY articles.created_at DESC`).then(({ rows }) => rows)
 }
+
+exports.selectCommentsByArticle = (id) => {
+    return db.query(`
+    SELECT author, comment_id, created_at, votes, body FROM comments
+    WHERE article_id = $1`, [id]).then(({ rows }) => {
+        return rows
+    })
+}
