@@ -25,6 +25,9 @@ describe("GET /api/topics", () => {
         });
       });
   });
+});
+
+describe("Errors", () => {
   test("should give a custom message for an invalid path", () => {
     return request(app)
       .get("/api/tobiics")
