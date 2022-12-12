@@ -27,6 +27,36 @@ describe("GET /api/topics", () => {
   });
 });
 
+
+describe('GET /api/articles/:article_id', () => {
+  test('should retrieve a specific article when fed its id', () => {
+    return request(app)
+    .get("/api/articles/1")
+    .expect(200)
+    .then(({ body }) => {
+      const { article } = body;
+      expect(article).toEqual({
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: '2020-07-09T20:11:00.000Z',
+        votes: 100,
+        article_id: 1
+      })
+    });
+  })
+  test('should return a 404 when id is valid but not found', () => {
+    return request(app)
+    .get("/api/articles/55")
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('article id not found')
+    });
+  })
+})
+
 describe("Errors", () => {
   test("should give a custom message for an invalid path", () => {
     return request(app)
@@ -39,22 +69,3 @@ describe("Errors", () => {
   });
 });
 
-// describe('GET /api/articles/:article_id', () => {
-//   test('should retrieve a specific article when fed its id', () => {
-//     return request(app)
-//     .get('api/articles/1')
-//     .expect(200)
-//     .then(({ body }) => {
-//       const { article } = body
-//       expect(article).toEqual({
-//         title: "Living in the shadow of a great man",
-//         topic: "mitch",
-//         author: "butter_bridge",
-//         body: "I find this existence challenging",
-//         created_at: 1594329060000,
-//         votes: 100,
-//         article_id: 1
-//       })
-//     })
-//   })
-// })

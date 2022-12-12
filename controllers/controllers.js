@@ -11,7 +11,10 @@ exports.getTopics = (req, res, next) => {
 
 
 exports.getArticleById = (req, res, next) => {
-    selectArticleById().then((article) => {
+    const id = req.params.article_id
+    selectArticleById(id).then((article) => {
         res.status(200).send({ article })
+    }).catch((err) => {
+        next(err)
     })
 }
