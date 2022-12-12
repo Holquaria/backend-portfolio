@@ -38,3 +38,23 @@ describe("Errors", () => {
       });
   });
 });
+
+// describe('GET /api/articles/:article_id', () => {
+//   test('should retrieve a specific article when fed its id', () => {
+//     return request(app)
+//     .get('api/articles/1')
+//     .expect(200)
+//     .then(({ body }) => {
+//       const { article } = body
+//       expect(article).toEqual({
+//         title: "Living in the shadow of a great man",
+//         topic: "mitch",
+//         author: "butter_bridge",
+//         body: "I find this existence challenging",
+//         created_at: 1594329060000,
+//         votes: 100,
+//         article_id: 1
+//       })
+//     })
+//   })
+// })
