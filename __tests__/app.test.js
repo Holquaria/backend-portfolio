@@ -36,8 +36,8 @@ describe('GET /api/articles', () => {
     .then(({ body }) => {
       const { articles } = body;
       expect(articles).toHaveLength(12)
-      articles.forEach((topic) => {
-        expect(topic).toEqual(
+      articles.forEach((article) => {
+        expect(article).toEqual(
           expect.objectContaining({
             author: expect.any(String),
             title: expect.any(String),
