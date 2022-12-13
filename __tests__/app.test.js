@@ -125,3 +125,63 @@ describe("Errors", () => {
   });
 });
 
+
+describe('GET /api/articles/:article_id/comments', () => {
+  test('should return all comments for the given article', () => {
+    return request(app)
+    .get("/api/articles/1/comments")
+    .expect(200)
+    .then(({ body }) => {
+      const { comments } = body;
+      expect(comments).toHaveLength(11)
+      comments.forEach((comment) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            comment_id: expect.any(Number),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            body: expect.any(String)
+          })
+        );
+      });
+    });
+  })
+  test('comments should be sorted by most recent', () => {
+    return request(app)
+    .get("/api/articles/1/comments")
+    .expect(200)
+    .then(({ body }) => {
+      const { comments } = body;
+      expect(comments).toBeSortedBy('created_at', { descending: true })
+    });
+  })
+  test('should return a 200 when id is present but no comments are found', () => {
+    return request(app)
+    .get("/api/articles/4/comments")
+    .expect(200)
+    .then(({ body }) => {
+      const { comments } = body;
+      expect(comments).toEqual([])
+    });
+  })
+  test('should return a 404 when id is valid but not found', () => {
+    return request(app)
+    .get("/api/articles/55/comments")
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('article id not found')
+    });
+  })
+  test('should return a 400 when id is not a valid data type', () => {
+    return request(app)
+    .get("/api/articles/pug/comments")
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('invalid id data type')
+    });
+  })
+})
+

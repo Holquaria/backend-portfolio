@@ -25,5 +25,26 @@ exports.selectArticles = () => {
     ON articles.article_id = comments.article_id
     GROUP BY articles.author, articles.title, articles.article_id, articles.created_at, articles.votes, comments.article_id
     ORDER BY articles.created_at DESC`).then(({ rows }) => rows)
+}
 
+exports.selectCommentsByArticle = (id) => {
+    return db.query(`
+    SELECT author, comment_id, created_at, votes, body FROM comments
+    WHERE article_id = $1
+    ORDER BY created_at DESC`, [id]).then(({ rows }) => {
+        return rows
+    })
+}
+
+exports.checkArticleExists = (id) => {
+    return db.query(`
+    SELECT * FROM articles
+    WHERE article_id = $1`, [id])
+    .then(({ rowCount }) => {
+        if (rowCount === 0) {
+            return Promise.reject({ status: 404, message: 'article id not found'})
+        } else {
+            return true
+        }
+    })
 }
