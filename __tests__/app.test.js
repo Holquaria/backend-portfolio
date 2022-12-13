@@ -64,6 +64,8 @@ describe('GET /api/articles/:article_id', () => {
     .then(({ body }) => {
       const { message } = body;
       expect(message).toBe('invalid id data type')
+    })
+  })
   test('articles should be sorted by date in descending order', () => {
     return request(app)
     .get("/api/articles")
@@ -109,7 +111,7 @@ describe('GET /api/articles', () => {
       });
     });
   })
-
+})
 
 describe("Errors", () => {
   test("should give a custom message for an invalid path", () => {
