@@ -1,4 +1,4 @@
-const { selectTopics, selectArticles, selectCommentsByArticle, checkArticleExists } = require('../models/models')
+const { selectTopics, selectArticles, selectArticleById, selectCommentsByArticle, checkArticleExists } = require('../models/models')
 
 
 exports.getTopics = (req, res, next) => {
@@ -17,6 +17,7 @@ exports.getArticles = (req, res, next) => {
     })
 }
 
+
 exports.getCommentsByArticle = (req, res, next) => {
     const id = req.params.article_id
     Promise.all([checkArticleExists(id), selectCommentsByArticle(id)])
@@ -26,3 +27,14 @@ exports.getCommentsByArticle = (req, res, next) => {
         next(err)
     })
 }
+
+
+exports.getArticleById = (req, res, next) => {
+    const id = req.params.article_id
+    selectArticleById(id).then((article) => {
+        res.status(200).send({ article })
+    }).catch((err) => {
+        next(err)
+    })
+}
+

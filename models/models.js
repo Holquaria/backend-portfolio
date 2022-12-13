@@ -4,6 +4,20 @@ exports.selectTopics = () => {
     return db.query('SELECT * FROM topics').then(({ rows }) => rows )
 }
 
+
+
+
+exports.selectArticleById = (id) => {
+    return db.query(
+    `SELECT * FROM articles
+    WHERE article_id = $1`, [id])
+    .then(({ rows }) => {
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, message: 'article id not found'})
+        }
+       return rows[0]} )
+}
+
 exports.selectArticles = () => {
     return db.query(`
     SELECT DISTINCT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, COUNT (comments.article_id) AS comment_count FROM articles
