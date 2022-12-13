@@ -13,7 +13,7 @@ exports.selectArticleById = (id) => {
     WHERE article_id = $1`, [id])
     .then(({ rows }) => {
         if (rows.length === 0) {
-            return Promise.reject({status: 404, message: 'article id not found'})
+            return Promise.reject({status: 404, msg: 'article id not found'})
         }
        return rows[0]} )
 }
@@ -42,7 +42,7 @@ exports.checkArticleExists = (id) => {
     WHERE article_id = $1`, [id])
     .then(({ rowCount }) => {
         if (rowCount === 0) {
-            return Promise.reject({ status: 404, message: 'article id not found'})
+            return Promise.reject({ status: 404, msg: 'article id not found'})
         } else {
             return true
         }
@@ -57,6 +57,19 @@ exports.insertCommentIntoArticle = (id, comment) => {
     VALUES
     ($1, $2, $3)
     RETURNING *`, [username, body, id])
+    .then(({ rows }) => {
+        return rows[0]
+    })
+}
+
+exports.updateArticle = (id, votes) => {
+    const { inc_votes } = votes
+    return db.query(`
+    UPDATE articles
+    SET
+    votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *`, [inc_votes, id])
     .then(({ rows }) => {
         return rows[0]
     })

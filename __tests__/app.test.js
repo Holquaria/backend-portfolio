@@ -63,7 +63,7 @@ describe('GET /api/articles/:article_id', () => {
     .expect(400)
     .then(({ body }) => {
       const { message } = body;
-      expect(message).toBe('invalid id data type')
+      expect(message).toBe('invalid input data type')
     })
   })
   test('articles should be sorted by date in descending order', () => {
@@ -180,7 +180,7 @@ describe('GET /api/articles/:article_id/comments', () => {
     .expect(400)
     .then(({ body }) => {
       const { message } = body;
-      expect(message).toBe('invalid id data type')
+      expect(message).toBe('invalid input data type')
     });
   })
 })
@@ -223,7 +223,7 @@ describe('POST /api/articles/:article_id/comments', () => {
     .expect(400)
     .then(({ body }) => {
       const { message } = body;
-      expect(message).toBe('invalid id data type')
+      expect(message).toBe('invalid input data type')
     });
   })
   test('will not post if the username does not exist', () => {
@@ -245,7 +245,7 @@ describe('POST /api/articles/:article_id/comments', () => {
     .expect(400)
     .then(({ body }) => {
       const { message } = body
-      expect(message).toBe('missing body in request')
+      expect(message).toBe('invalid input in request')
     })
   })
   test('will not post comments with invalid comment body', () => {
@@ -256,7 +256,74 @@ describe('POST /api/articles/:article_id/comments', () => {
     .expect(400)
     .then(({ body }) => {
       const { message } = body
-      expect(message).toBe('missing body in request')
+      expect(message).toBe('invalid input in request')
+    })
+  })
+})
+
+describe('PATCH /api/articles/:article_id', () => {
+  test('will update an article with the given number of votes', () => {
+    const votes = { inc_votes: 5 }
+    return request(app)
+    .patch('/api/articles/5')
+    .send(votes)
+    .expect(200)
+    .then(({ body }) => {
+      const { article } = body
+      expect(article).toEqual({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: 5,
+          body: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: 5,
+        }
+      );
+    })
+  })
+  test('will not update a non-existent article', () => {
+    const votes = { inc_votes: 5 }
+    return request(app)
+    .patch('/api/articles/55')
+    .send(votes)
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('article id not found')
+    })
+  })
+  test('should return a 400 when id is not a valid data type', () => {
+    const votes = { inc_votes: 5 }
+    return request(app)
+    .patch("/api/articles/pug")
+    .send(votes)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('invalid input data type')
+    });
+  })
+  test('will return a 400 when votes is an invalid input data type', () => {
+    const votes = { inc_votes: 'steve' }
+    return request(app)
+    .patch('/api/articles/5')
+    .send(votes)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('invalid input data type')
+    })
+  })
+  test('will return a 400 when attempting to change any other value', () => {
+    const newTitle = { title: 'steve' }
+    return request(app)
+    .patch('/api/articles/5')
+    .send(newTitle)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('invalid input in request')
     })
   })
 })
