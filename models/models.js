@@ -18,13 +18,24 @@ exports.selectArticleById = (id) => {
        return rows[0]} )
 }
 
-exports.selectArticles = () => {
-    return db.query(`
+exports.selectArticles = (queries) => {
+    let queryString = `
     SELECT DISTINCT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, COUNT (comments.article_id) AS comment_count FROM articles
     LEFT JOIN comments
     ON articles.article_id = comments.article_id
+     `
+
+    const queryValues = []
+    if (queries.topic !== undefined) {
+        queryString += ` WHERE topic = $1`
+        queryValues.push(queries.topic)
+    }
+
+    queryString += `
     GROUP BY articles.author, articles.title, articles.article_id, articles.created_at, articles.votes, comments.article_id
-    ORDER BY articles.created_at DESC`).then(({ rows }) => rows)
+    ORDER BY articles.created_at DESC`
+
+    return db.query(queryString, queryValues).then(({ rows }) => rows)
 }
 
 exports.selectCommentsByArticle = (id) => {
