@@ -185,3 +185,78 @@ describe('GET /api/articles/:article_id/comments', () => {
   })
 })
 
+describe('POST /api/articles/:article_id/comments', () => {
+  test('will post a new comment and respond with the comment', () => {
+    const newComment = { username: 'butter_bridge', body: 'Very insightful' }
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send(newComment)
+    .expect(201)
+    .then(({ body }) => {
+      const { comment } = body
+      expect(comment).toEqual(
+        expect.objectContaining({
+          author: 'butter_bridge',
+          comment_id: expect.any(Number),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          body: 'Very insightful',
+          article_id: 4
+        })
+      )
+    })
+  })
+  test('will not post to a non existent article', () => {
+    const newComment = { username: 'butter_bridge', body: 'Very insightful' }
+    return request(app)
+    .post('/api/articles/55/comments')
+    .send(newComment)
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('article id not found')
+    })
+  })
+  test('should return a 400 when id is not a valid data type', () => {
+    return request(app)
+    .post("/api/articles/pug/comments")
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('invalid id data type')
+    });
+  })
+  test('will not post if the username does not exist', () => {
+    const newComment = { username: 666, body: 'Very insightful' }
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send(newComment)
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('username does not exist')
+    })
+  })
+  test('will not post when content is missing from the body', () => {
+    const newComment = { username: 'butter_bridge' }
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('missing body in request')
+    })
+  })
+  test('will not post comments with invalid comment body', () => {
+    const newComment = { username: 'butter_bridge', banana: 10 }
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('missing body in request')
+    })
+  })
+})
