@@ -14,6 +14,12 @@ exports.handleInvalidId = (err, req, res, next) => {
     } else next(err)
 }
 
+exports.handleInvalidBody = (err, req, res, next) => {
+    if (err.code === '23503') {
+        res.status(400).send({ message: 'invalid data type in request' })
+    } else next(err)
+}
+
 exports.handle500Error = (err, req, res, next) => {
     console.log(err);
     res.status(500).send({ message: "Internal Server Error" });

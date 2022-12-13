@@ -40,7 +40,8 @@ exports.getArticleById = (req, res, next) => {
 
 exports.postCommentToArticle = (req, res, next) => {
     const id = req.params.article_id
-    insertCommentIntoArticle(id, req.body).then((comment) => {
+    Promise.all([checkArticleExists(id), insertCommentIntoArticle(id, req.body)])
+    .then(([err, comment]) => {
         res.status(201).send({ comment })
     }).catch((err) => {
         next(err)
