@@ -12,13 +12,13 @@ exports.handleAbsentId = (err, req, res, next) => {
 
 exports.handleInvalidBody = (err, req, res, next) => {
     if (err.code === '23502') {
-        res.status(400).send({ message: 'missing body in request' })
+        res.status(400).send({ message: 'invalid input in request' })
     } else next(err)
 }
 
 exports.handleInvalidId = (err, req, res, next) => {
     if (err.code === '22P02') {
-        res.status(400).send({ message: 'invalid id data type' })
+        res.status(400).send({ message: 'invalid input data type' })
     } else next(err)
 }
 
