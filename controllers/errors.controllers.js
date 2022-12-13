@@ -10,7 +10,7 @@ exports.handleAbsentId = (err, req, res, next) => {
 
 exports.handleInvalidBody = (err, req, res, next) => {
     if (err.code === '23502') {
-        res.status(400).send({ message: 'invalid data type in request' })
+        res.status(400).send({ message: 'missing body in request' })
     } else next(err)
 }
 
@@ -22,11 +22,10 @@ exports.handleInvalidId = (err, req, res, next) => {
 
 exports.handleAbsentUsername = (err, req, res, next) => {
     if (err.code === '23503') {
-        res.status(400).send({ message: 'username does not exist' })
+        res.status(404).send({ message: 'username does not exist' })
     } else next(err)
 }
 
 exports.handle500Error = (err, req, res, next) => {
-    console.log(err);
     res.status(500).send({ message: "Internal Server Error" });
 }
