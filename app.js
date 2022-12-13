@@ -9,8 +9,8 @@ app.get('/api/articles', getArticles)
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticle)
 
-app.use(handleAbsentId)
 app.use(handleInvalidId)
+app.use(handleAbsentId)
 app.all("*", handleInvalidPath);
 app.use(handle500Error);
 

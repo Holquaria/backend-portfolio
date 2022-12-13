@@ -114,6 +114,15 @@ describe('GET /api/articles/:article_id/comments', () => {
       expect(comments).toBeSortedBy('created_at', { descending: true })
     });
   })
+  test('should return a 200 when id is present but no comments are found', () => {
+    return request(app)
+    .get("/api/articles/4/comments")
+    .expect(200)
+    .then(({ body }) => {
+      const { comments } = body;
+      expect(comments).toEqual([])
+    });
+  })
   test('should return a 404 when id is valid but not found', () => {
     return request(app)
     .get("/api/articles/55/comments")
