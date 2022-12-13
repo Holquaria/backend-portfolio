@@ -5,8 +5,8 @@ exports.handleInvalidPath = (req, res, next) => {
 
 
 exports.handleAbsentId = (err, req, res, next) => {
-    if (err.message) {
-        res.status(err.status).send({ message: err.message })
+    if (err.msg) {
+        res.status(err.status).send({ message: err.msg })
     } else next(err)
 }
 
@@ -29,5 +29,6 @@ exports.handleAbsentUsername = (err, req, res, next) => {
 }
 
 exports.handle500Error = (err, req, res, next) => {
+    console.log(err)
     res.status(500).send({ message: "Internal Server Error" });
 }
