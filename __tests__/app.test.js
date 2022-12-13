@@ -270,7 +270,16 @@ describe('PATCH /api/articles/:article_id', () => {
     .expect(200)
     .then(({ body }) => {
       const { article } = body
-      expect(article.votes).toBe(5)
+      expect(article).toEqual({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: 5,
+          body: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: 5,
+        }
+      );
     })
   })
   test('will not update a non-existent article', () => {
