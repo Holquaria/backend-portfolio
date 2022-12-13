@@ -185,23 +185,24 @@ describe('GET /api/articles/:article_id/comments', () => {
   })
 })
 
-// describe('POST /api/articles/:article_id/comments', () => {
-//   test('will post a new comment and respond with the comment', () => {
-//     const newComment = { username: 'butter_bridge', body: 'Very insightful' }
-//     return request(app)
-//     .post('/api/articles/4/comments')
-//     .expect(201)
-//     .then(({ body }) => {
-//       const { comment } = body
-//       expect(comment).toEqual(
-//         expect.objectContaining({
-//           author: expect('butter_bridge'),
-//           body: expect('Very insightful'),
-//           comment_id: expect.any(Number),
-//           article_id: 4,
-//           created_at: expect.any(String),
-//           votes: expect.any(Number),
-//         }))
-//     })
-//   })
-// })
+describe('POST /api/articles/:article_id/comments', () => {
+  test('will post a new comment and respond with the comment', () => {
+    const newComment = { username: 'butter_bridge', body: 'Very insightful' }
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send(newComment)
+    .expect(201)
+    .then(({ body }) => {
+      const { comment } = body
+      expect(comment).toEqual(
+        expect.objectContaining({
+          author: 'butter_bridge',
+          comment_id: expect.any(Number),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          body: 'Very insightful'
+        })
+      )
+    })
+  })
+})
