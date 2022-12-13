@@ -8,8 +8,8 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:article_id", getArticleById)
 
-app.use(handleAbsentId)
 app.use(handleInvalidId)
+app.use(handleAbsentId)
 app.all("*", handleInvalidPath);
 app.use(handle500Error);
 
