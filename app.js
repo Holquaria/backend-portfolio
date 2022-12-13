@@ -13,6 +13,7 @@ const {
   handleAbsentId,
   handleInvalidId,
   handleInvalidBody,
+  handleAbsentUsername
 } = require("./controllers/errors.controllers");
 
 const app = express();
@@ -25,6 +26,7 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticle);
 app.get("/api/articles/:article_id", getArticleById);
 app.post("/api/articles/:article_id/comments", postCommentToArticle);
 
+app.use(handleAbsentUsername)
 app.use(handleInvalidBody)
 app.use(handleInvalidId);
 app.use(handleAbsentId);

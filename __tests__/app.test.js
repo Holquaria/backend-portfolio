@@ -216,8 +216,30 @@ describe('POST /api/articles/:article_id/comments', () => {
       expect(message).toBe('article id not found')
     })
   })
-  test.only('will not post invalid data types', () => {
+  test('will not post invalid data types', () => {
     const newComment = { username: 666, body: 'Very insightful' }
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('username does not exist')
+    })
+  })
+  test('will not post invalid data types', () => {
+    const newComment = { username: 'butter_bridge' }
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('invalid data type in request')
+    })
+  })
+  test('will not post comments with invalid comments', () => {
+    const newComment = { username: 'butter_bridge', banana: 10 }
     return request(app)
     .post('/api/articles/4/comments')
     .send(newComment)

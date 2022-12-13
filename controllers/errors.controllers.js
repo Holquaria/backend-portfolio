@@ -8,15 +8,21 @@ exports.handleAbsentId = (err, req, res, next) => {
     } else next(err)
 }
 
+exports.handleInvalidBody = (err, req, res, next) => {
+    if (err.code === '23502') {
+        res.status(400).send({ message: 'invalid data type in request' })
+    } else next(err)
+}
+
 exports.handleInvalidId = (err, req, res, next) => {
     if (err.code === '22P02') {
         res.status(400).send({ message: 'invalid id data type' })
     } else next(err)
 }
 
-exports.handleInvalidBody = (err, req, res, next) => {
+exports.handleAbsentUsername = (err, req, res, next) => {
     if (err.code === '23503') {
-        res.status(400).send({ message: 'invalid data type in request' })
+        res.status(400).send({ message: 'username does not exist' })
     } else next(err)
 }
 
