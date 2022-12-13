@@ -1,4 +1,4 @@
-const { selectTopics, selectArticles, selectArticleById, selectCommentsByArticle, checkArticleExists, insertCommentIntoArticle } = require('../models/models')
+const { selectTopics, selectArticles, selectArticleById, selectCommentsByArticle, checkArticleExists, insertCommentIntoArticle, selectUsers } = require('../models/models')
 
 
 exports.getTopics = (req, res, next) => {
@@ -45,5 +45,11 @@ exports.postCommentToArticle = (req, res, next) => {
         res.status(201).send({ comment })
     }).catch((err) => {
         next(err)
+    })
+}
+
+exports.getUsers = (req, res, next) => {
+    selectUsers().then((users) => {
+        res.status(200).send({ users })
     })
 }

@@ -61,3 +61,8 @@ exports.insertCommentIntoArticle = (id, comment) => {
         return rows[0]
     })
 }
+
+exports.selectUsers = () => {
+    return db.query(`SELECT * FROM users`)
+    .then(({ rows }) => rows)
+}

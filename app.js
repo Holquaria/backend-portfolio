@@ -5,7 +5,8 @@ const {
   getArticles,
   getArticleById,
   getCommentsByArticle,
-  postCommentToArticle
+  postCommentToArticle,
+  getUsers,
 } = require("./controllers/controllers");
 const {
   handle500Error,
@@ -25,6 +26,7 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getCommentsByArticle);
 app.get("/api/articles/:article_id", getArticleById);
 app.post("/api/articles/:article_id/comments", postCommentToArticle);
+app.get("/api/users", getUsers)
 
 app.use(handleAbsentUsername)
 app.use(handleInvalidBody)
