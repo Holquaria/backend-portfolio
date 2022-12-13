@@ -185,3 +185,16 @@ describe('GET /api/articles/:article_id/comments', () => {
   })
 })
 
+// describe('PATCH /api/articles/:article_id', () => {
+//   test('will update an article with the given number of votes', () => {
+//     const votes = { inc_votes: 5}
+//     return request(app)
+//     .patch('/api/articles/5')
+//     .send(votes)
+//     .expect(200)
+//     .then(({ body }) => {
+//       const { article } = body
+//       expect(article.votes).toBe(5)
+//     })
+//   })
+// })

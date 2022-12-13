@@ -2,6 +2,8 @@ exports.handleInvalidPath = (req, res, next) => {
     res.status(404).send({ message: 'path not found' })
 }
 
+
+
 exports.handleAbsentId = (err, req, res, next) => {
     if (err.message) {
         res.status(err.status).send({ message: err.message })
