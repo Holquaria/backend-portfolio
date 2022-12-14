@@ -62,6 +62,11 @@ exports.insertCommentIntoArticle = (id, comment) => {
     })
 }
 
+exports.selectUsers = () => {
+    return db.query(`SELECT * FROM users`)
+    .then(({ rows }) => rows)
+}
+
 exports.updateArticle = (id, votes) => {
     const { inc_votes } = votes
     return db.query(`
