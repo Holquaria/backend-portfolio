@@ -18,7 +18,14 @@ exports.selectArticleById = (id) => {
        return rows[0]} )
 }
 
-exports.selectArticles = (queries) => {
+exports.selectArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
+    const validSortQueries = ['author', 'title', 'article_id', 'topic', 'created_at', 'votes']
+
+    if (!validSortQueries.includes(sort_by)) {
+        return Promise.reject({status: 400, msg: 'bad request'})
+    }
+
+
     let queryString = `
     SELECT DISTINCT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, COUNT (comments.article_id) AS comment_count FROM articles
     LEFT JOIN comments
@@ -26,14 +33,14 @@ exports.selectArticles = (queries) => {
      `
 
     const queryValues = []
-    if (queries.topic !== undefined) {
+    if (topic !== undefined) {
         queryString += ` WHERE topic = $1`
         queryValues.push(queries.topic)
     }
 
     queryString += `
     GROUP BY articles.author, articles.title, articles.article_id, articles.created_at, articles.votes, comments.article_id
-    ORDER BY articles.created_at DESC`
+    ORDER BY articles.${sort_by} DESC`
 
     return db.query(queryString, queryValues).then(({ rows }) => rows)
 }

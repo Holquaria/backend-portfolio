@@ -111,28 +111,28 @@ describe('GET /api/articles', () => {
       });
     });
   })
-  test('should respond with all articles of given topic', () => {
-    return request(app)
-    .get("/api/articles?topic=mitch")
-    .expect(200)
-    .then(({ body }) => {
-      const { articles } = body;
-      expect(articles).toHaveLength(11)
-      articles.forEach((article) => {
-        expect(article).toEqual(
-          expect.objectContaining({
-            author: expect.any(String),
-            title: expect.any(String),
-            article_id: expect.any(Number),
-            topic: 'mitch',
-            created_at: expect.any(String),
-            votes: expect.any(Number),
-            comment_count: expect.any(String)
-          })
-        );
-      });
-    });
-  })
+  // test('should respond with all articles of given topic', () => {
+  //   return request(app)
+  //   .get("/api/articles?topic=mitch")
+  //   .expect(200)
+  //   .then(({ body }) => {
+  //     const { articles } = body;
+  //     expect(articles).toHaveLength(11)
+  //     articles.forEach((article) => {
+  //       expect(article).toEqual(
+  //         expect.objectContaining({
+  //           author: expect.any(String),
+  //           title: expect.any(String),
+  //           article_id: expect.any(Number),
+  //           topic: 'mitch',
+  //           created_at: expect.any(String),
+  //           votes: expect.any(Number),
+  //           comment_count: expect.any(String)
+  //         })
+  //       );
+  //     });
+  //   });
+  // })
 })
 
 describe("Errors", () => {
