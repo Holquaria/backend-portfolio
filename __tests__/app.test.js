@@ -30,7 +30,7 @@ describe("GET /api/topics", () => {
 
 
 
-describe('GET /api/articles/:article_id', () => {
+describe.only('GET /api/articles/:article_id', () => {
   test('should retrieve a specific article when fed its id', () => {
     return request(app)
     .get("/api/articles/1")
@@ -44,7 +44,8 @@ describe('GET /api/articles/:article_id', () => {
         body: "I find this existence challenging",
         created_at: '2020-07-09T20:11:00.000Z',
         votes: 100,
-        article_id: 1
+        article_id: 1,
+        comment_count: '11'
       })
     });
   })
@@ -107,25 +108,25 @@ describe('GET /api/articles', () => {
             votes: expect.any(Number),
             comment_count: expect.any(String)
           })
-        );
+          );
+        });
       });
-    });
+    })
   })
-})
-
-describe("Errors", () => {
-  test("should give a custom message for an invalid path", () => {
-    return request(app)
+  
+  describe("Errors", () => {
+    test("should give a custom message for an invalid path", () => {
+      return request(app)
       .get("/api/tobiics")
       .expect(404)
       .then(({ body }) => {
         const { message } = body;
         expect(message).toBe("path not found");
       });
+    });
   });
-});
-
-
+  
+  
 describe('GET /api/articles/:article_id/comments', () => {
   test('should return all comments for the given article', () => {
     return request(app)
