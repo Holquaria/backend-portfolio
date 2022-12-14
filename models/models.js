@@ -79,3 +79,13 @@ exports.updateArticle = (id, votes) => {
         return rows[0]
     })
 }
+
+exports.removeCommentById = (id) => {
+    return db.query(`
+    DELETE FROM comments
+    WHERE comment_id = $1`, [id])
+    .then(({ rowCount }) => {
+        console.log(rowCount)
+        return rowCount
+    })
+}
