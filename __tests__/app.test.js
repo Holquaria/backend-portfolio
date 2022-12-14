@@ -349,3 +349,11 @@ describe('GET /api/users', () => {
     })
   })
 })
+
+// describe('DELETE /api/comments/:comment_id', () => {
+//   test('should delete a comment from the database', () => {
+//     return request(app)
+//     .delete('/api/comments/1')
+//     .expect(204)
+//   })
+// })
