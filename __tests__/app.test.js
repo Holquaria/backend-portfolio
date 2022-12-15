@@ -45,8 +45,17 @@ describe.only('GET /api/articles/:article_id', () => {
         created_at: '2020-07-09T20:11:00.000Z',
         votes: 100,
         article_id: 1,
-        comment_count: '11'
+        comment_count: expect.any(String)
       })
+    });
+  })
+  test('should return a comment count for a specific article', () => {
+    return request(app)
+    .get("/api/articles/1")
+    .expect(200)
+    .then(({ body }) => {
+      const { article } = body;
+      expect(article.comment_count).toEqual('11')
     });
   })
   test('should return a 404 when id is valid but not found', () => {
