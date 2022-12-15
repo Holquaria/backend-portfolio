@@ -37,15 +37,24 @@ describe('GET /api/articles/:article_id', () => {
     .expect(200)
     .then(({ body }) => {
       const { article } = body;
-      expect(article).toEqual({
+      expect(article).toMatchObject({
         title: "Living in the shadow of a great man",
         topic: "mitch",
         author: "butter_bridge",
         body: "I find this existence challenging",
         created_at: '2020-07-09T20:11:00.000Z',
         votes: 100,
-        article_id: 1
+        article_id: 1,
       })
+    });
+  })
+  test('should return a comment count for a specific article', () => {
+    return request(app)
+    .get("/api/articles/1")
+    .expect(200)
+    .then(({ body }) => {
+      const { article } = body;
+      expect(article.comment_count).toEqual('11')
     });
   })
   test('should return a 404 when id is valid but not found', () => {
@@ -107,160 +116,163 @@ describe('GET /api/articles', () => {
             votes: expect.any(Number),
             comment_count: expect.any(String)
           })
-        );
+          );
+        });
       });
-    });
-  })
-  test('should respond with all articles of given topic', () => {
-    return request(app)
-    .get("/api/articles?topic=mitch")
-    .expect(200)
-    .then(({ body }) => {
-      const { articles } = body;
-      expect(articles).toHaveLength(11)
-      articles.forEach((article) => {
-        expect(article).toEqual(
-          expect.objectContaining({
-            author: expect.any(String),
-            title: expect.any(String),
-            article_id: expect.any(Number),
-            topic: 'mitch',
-            created_at: expect.any(String),
-            votes: expect.any(Number),
-            comment_count: expect.any(String)
-          })
-        );
+    })
+    test('should respond with all articles of given topic', () => {
+      return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(11)
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: 'mitch',
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              comment_count: expect.any(String)
+            })
+          );
+        });
       });
-    });
+    })
+    test('should respond an empty array if there are no articles of the given topic', () => {
+      return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeInstanceOf(Array)
+        expect(articles).toHaveLength(0)
+      });
+    })
+    test('should sort by given column when valid', () => {
+      return request(app)
+      .get("/api/articles?sort_by=title")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy('title', { descending: true })
+      });
+    })
+    test('should be in ascending order when given', () => {
+      return request(app)
+      .get("/api/articles?sort_by=title&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy('title', { ascending: true })
+      });
+    })
+    test('should respond with 400 bad request when sort_by is not a valid column', () => {
+      return request(app)
+      .get("/api/articles?sort_by=banana")
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe('bad request')
+      });
+    })
+    test('should respond with 400 bad request when order is not asc or desc', () => {
+      return request(app)
+      .get("/api/articles?order=banana")
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe('bad request')
+      });
+    })
+    test('should respond with 404 when topic does not exist', () => {
+      return request(app)
+      .get("/api/articles?topic=banana")
+      .expect(404)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe('topic not found')
+      });
+    })
   })
-  test('should respond an empty array if there are no articles of the given topic', () => {
-    return request(app)
-    .get("/api/articles?topic=paper")
-    .expect(200)
-    .then(({ body }) => {
-      const { articles } = body;
-      expect(articles).toBeInstanceOf(Array)
-      expect(articles).toHaveLength(0)
-    });
+  
+    
+    
+  describe('GET /api/articles/:article_id/comments', () => {
+    test('should return all comments for the given article', () => {
+      return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toHaveLength(11)
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              comment_id: expect.any(Number),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              body: expect.any(String)
+            })
+          );
+        });
+      });
+    })
+    test('comments should be sorted by most recent', () => {
+      return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toBeSortedBy('created_at', { descending: true })
+      });
+    })
+    test('should return a 200 when id is present but no comments are found', () => {
+      return request(app)
+      .get("/api/articles/4/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toEqual([])
+      });
+    })
+    test('should return a 404 when id is valid but not found', () => {
+      return request(app)
+      .get("/api/articles/55/comments")
+      .expect(404)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe('article id not found')
+      });
+    })
+    test('should return a 400 when id is not a valid data type', () => {
+      return request(app)
+      .get("/api/articles/pug/comments")
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe('invalid input data type')
+      });
+    })
   })
-  test('should sort by given column when valid', () => {
-    return request(app)
-    .get("/api/articles?sort_by=title")
-    .expect(200)
-    .then(({ body }) => {
-      const { articles } = body;
-      expect(articles).toBeSortedBy('title', { descending: true })
-    });
-  })
-  test('should be in ascending order when given', () => {
-    return request(app)
-    .get("/api/articles?sort_by=title&order=asc")
-    .expect(200)
-    .then(({ body }) => {
-      const { articles } = body;
-      expect(articles).toBeSortedBy('title', { ascending: true })
-    });
-  })
-  test('should respond with 400 bad request when sort_by is not a valid column', () => {
-    return request(app)
-    .get("/api/articles?sort_by=banana")
-    .expect(400)
-    .then(({ body }) => {
-      const { message } = body;
-      expect(message).toBe('bad request')
-    });
-  })
-  test('should respond with 400 bad request when order is not asc or desc', () => {
-    return request(app)
-    .get("/api/articles?order=banana")
-    .expect(400)
-    .then(({ body }) => {
-      const { message } = body;
-      expect(message).toBe('bad request')
-    });
-  })
-  test('should respond with 404 when topic does not exist', () => {
-    return request(app)
-    .get("/api/articles?topic=banana")
-    .expect(404)
-    .then(({ body }) => {
-      const { message } = body;
-      expect(message).toBe('topic not found')
-    });
-  })
-})
 
-describe("Errors", () => {
-  test("should give a custom message for an invalid path", () => {
-    return request(app)
-      .get("/api/tobiics")
+  
+  describe("Errors", () => {
+    test("should give a custom message for an invalid path", () => {
+      return request(app)
+            .get("/api/tobiics")
       .expect(404)
       .then(({ body }) => {
         const { message } = body;
         expect(message).toBe("path not found");
       });
+    });
   });
-});
 
-
-describe('GET /api/articles/:article_id/comments', () => {
-  test('should return all comments for the given article', () => {
-    return request(app)
-    .get("/api/articles/1/comments")
-    .expect(200)
-    .then(({ body }) => {
-      const { comments } = body;
-      expect(comments).toHaveLength(11)
-      comments.forEach((comment) => {
-        expect(comment).toEqual(
-          expect.objectContaining({
-            author: expect.any(String),
-            comment_id: expect.any(Number),
-            created_at: expect.any(String),
-            votes: expect.any(Number),
-            body: expect.any(String)
-          })
-        );
-      });
-    });
-  })
-  test('comments should be sorted by most recent', () => {
-    return request(app)
-    .get("/api/articles/1/comments")
-    .expect(200)
-    .then(({ body }) => {
-      const { comments } = body;
-      expect(comments).toBeSortedBy('created_at', { descending: true })
-    });
-  })
-  test('should return a 200 when id is present but no comments are found', () => {
-    return request(app)
-    .get("/api/articles/4/comments")
-    .expect(200)
-    .then(({ body }) => {
-      const { comments } = body;
-      expect(comments).toEqual([])
-    });
-  })
-  test('should return a 404 when id is valid but not found', () => {
-    return request(app)
-    .get("/api/articles/55/comments")
-    .expect(404)
-    .then(({ body }) => {
-      const { message } = body;
-      expect(message).toBe('article id not found')
-    });
-  })
-  test('should return a 400 when id is not a valid data type', () => {
-    return request(app)
-    .get("/api/articles/pug/comments")
-    .expect(400)
-    .then(({ body }) => {
-      const { message } = body;
-      expect(message).toBe('invalid input data type')
-    });
-  })
-})
 
 describe('POST /api/articles/:article_id/comments', () => {
   test('will post a new comment and respond with the comment', () => {

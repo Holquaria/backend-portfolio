@@ -6,9 +6,8 @@ const {
   checkArticleExists,
   insertCommentIntoArticle,
   updateArticle,
-  selectUsers,
-  removeCommentById
-  checkTopicExists
+  removeCommentById,
+  checkTopicExists,
   selectUsers
 } = require("../models/models");
 
