@@ -37,7 +37,7 @@ describe.only('GET /api/articles/:article_id', () => {
     .expect(200)
     .then(({ body }) => {
       const { article } = body;
-      expect(article).toEqual({
+      expect(article).toMatchObject({
         title: "Living in the shadow of a great man",
         topic: "mitch",
         author: "butter_bridge",
@@ -45,7 +45,6 @@ describe.only('GET /api/articles/:article_id', () => {
         created_at: '2020-07-09T20:11:00.000Z',
         votes: 100,
         article_id: 1,
-        comment_count: expect.any(String)
       })
     });
   })
