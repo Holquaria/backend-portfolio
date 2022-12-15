@@ -11,7 +11,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
@@ -22,6 +22,35 @@
           "created_at": 1527695953341
         }
       ]
+    }
+  },
+  "GET /api/articles/:article_id": {
+    "description": "serves an article by id given",
+    "queries": [],
+    "exampleResponse": { "article": 
+      {
+        "title": "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+        "topic": "coding",
+        "author": "jessjelly",
+        "body": "Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.",
+        "created_at": 1589418120000,
+        "votes": 0,
+        "article_id": 2
+      }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "serves all comments for a given article id",
+    "queries": [],
+    "exampleResponse": { "comments":
+      {
+        "body": "Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+        "votes": -1,
+        "author": "tickle122",
+        "article_id": 18,
+        "created_at": 1590103140000,
+        "comment_id": 1
+      }
     }
   }
 }
