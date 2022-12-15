@@ -55,12 +55,28 @@ exports.selectArticles = (topic, sort_by = "created_at", order = "desc") => {
     ORDER BY articles.${sort_by} ${order}`;
 
   return db.query(queryString, queryValues).then(({ rows }) => {
-    if (rows.length === 0) {
-      return Promise.reject({ status: 404, msg: "content not found" });
-    }
     return rows;
   });
 };
+
+exports.checkTopicExists = (topic) => {
+    if (topic !== undefined) {
+    return db
+    .query(
+      `
+    SELECT * FROM topics
+    WHERE slug = $1`,
+      [topic]
+    )
+    .then(({ rowCount }) => {
+      if (rowCount === 0) {
+        return Promise.reject({ status: 404, msg: "topic not found" });
+      } else {
+        return true;
+      }
+    });
+} else return true
+}
 
 exports.selectCommentsByArticle = (id) => {
   return db

@@ -133,6 +133,16 @@ describe('GET /api/articles', () => {
       });
     });
   })
+  test('should respond an empty array if there are no articles of the given topic', () => {
+    return request(app)
+    .get("/api/articles?topic=paper")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body;
+      expect(articles).toBeInstanceOf(Array)
+      expect(articles).toHaveLength(0)
+    });
+  })
   test('should sort by given column when valid', () => {
     return request(app)
     .get("/api/articles?sort_by=title")
@@ -175,7 +185,7 @@ describe('GET /api/articles', () => {
     .expect(404)
     .then(({ body }) => {
       const { message } = body;
-      expect(message).toBe('content not found')
+      expect(message).toBe('topic not found')
     });
   })
 })
