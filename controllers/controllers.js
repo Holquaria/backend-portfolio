@@ -6,7 +6,7 @@ const {
   checkArticleExists,
   insertCommentIntoArticle,
   updateArticle,
-  checkTopicExists
+  checkTopicExists,
   selectUsers
 } = require("../models/models");
 
