@@ -147,6 +147,22 @@ exports.updateArticle = (id, votes) => {
       [inc_votes, id]
     )
     .then(({ rows }) => {
+        return rows[0]
+    })
+}
+
+exports.removeCommentById = (id) => {
+    return db.query(`
+    DELETE FROM comments
+    WHERE comment_id = $1`, [id])
+    .then(({ rowCount }) => {
+        if (rowCount !== 1) {
+            return Promise.reject({status: 404, msg: 'comment not found'})
+        }
+        return rowCount
+    })
+}
       return rows[0];
     });
 };
+

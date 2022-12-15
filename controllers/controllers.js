@@ -6,6 +6,7 @@ const {
   checkArticleExists,
   insertCommentIntoArticle,
   updateArticle,
+  removeCommentById,
   checkTopicExists,
   selectUsers
 } = require("../models/models");
@@ -82,3 +83,11 @@ exports.getUsers = (req, res, next) => {
       next(err);
     });
 };
+
+exports.deleteCommentById = (req, res, next) => {
+    removeCommentById(req.params.comment_id).then(() => {
+        res.status(204).send()
+    }).catch((err) => {
+        next(err)
+    })
+}
