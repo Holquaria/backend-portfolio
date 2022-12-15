@@ -122,11 +122,12 @@ describe('GET /api/articles', () => {
       });
     })
   })
+
   
   describe("Errors", () => {
     test("should give a custom message for an invalid path", () => {
       return request(app)
-      .get("/api/tobiics")
+            .get("/api/tobiics")
       .expect(404)
       .then(({ body }) => {
         const { message } = body;
@@ -134,6 +135,86 @@ describe('GET /api/articles', () => {
       });
     });
   });
+
+  test('should respond with all articles of given topic', () => {
+    return request(app)
+    .get("/api/articles?topic=mitch")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body;
+      expect(articles).toHaveLength(11)
+      articles.forEach((article) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: 'mitch',
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            comment_count: expect.any(String)
+          })
+        );
+      });
+    });
+  })
+  test('should respond an empty array if there are no articles of the given topic', () => {
+    return request(app)
+    .get("/api/articles?topic=paper")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body;
+      expect(articles).toBeInstanceOf(Array)
+      expect(articles).toHaveLength(0)
+    });
+  })
+  test('should sort by given column when valid', () => {
+    return request(app)
+    .get("/api/articles?sort_by=title")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body;
+      expect(articles).toBeSortedBy('title', { descending: true })
+    });
+  })
+  test('should be in ascending order when given', () => {
+    return request(app)
+    .get("/api/articles?sort_by=title&order=asc")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body;
+      expect(articles).toBeSortedBy('title', { ascending: true })
+    });
+  })
+  test('should respond with 400 bad request when sort_by is not a valid column', () => {
+    return request(app)
+    .get("/api/articles?sort_by=banana")
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('bad request')
+    });
+  })
+  test('should respond with 400 bad request when order is not asc or desc', () => {
+    return request(app)
+    .get("/api/articles?order=banana")
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('bad request')
+    });
+  })
+  test('should respond with 404 when topic does not exist', () => {
+    return request(app)
+    .get("/api/articles?topic=banana")
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('topic not found')
+    });
+  })
+})
+
   
   
 describe('GET /api/articles/:article_id/comments', () => {
