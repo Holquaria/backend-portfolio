@@ -426,3 +426,29 @@ describe('GET /api/users', () => {
     })
   })
 })
+
+describe('DELETE /api/comments/:comment_id', () => {
+  test('should delete a comment from the database', () => {
+    return request(app)
+    .delete('/api/comments/1')
+    .expect(204)
+  })
+  test('should respond with a 404 if the comment does not exist', () => {
+    return request(app)
+    .delete('/api/comments/666')
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('comment not found')
+    })
+  })
+  test('should respond with a 400 if the comment id is not valid', () => {
+    return request(app)
+    .delete('/api/comments/pug')
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('invalid input data type')
+    })
+  })
+})

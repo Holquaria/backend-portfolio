@@ -7,7 +7,8 @@ const {
   getCommentsByArticle,
   postCommentToArticle,
   getUsers,
-  patchArticle
+  patchArticle,
+  deleteCommentById
 } = require("./controllers/controllers");
 const {
   handle500Error,
@@ -29,6 +30,7 @@ app.get("/api/articles/:article_id", getArticleById);
 app.post("/api/articles/:article_id/comments", postCommentToArticle);
 app.get("/api/users", getUsers)
 app.patch("/api/articles/:article_id", patchArticle)
+app.delete("/api/comments/:comment_id", deleteCommentById)
 
 app.use(handleAbsentUsername)
 app.use(handleInvalidBody)
