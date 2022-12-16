@@ -8,7 +8,8 @@ const {
   updateArticle,
   removeCommentById,
   checkTopicExists,
-  selectUsers
+  selectUsers,
+  selectAllEndpoints
 } = require("../models/models");
 
 
@@ -87,6 +88,15 @@ exports.getUsers = (req, res, next) => {
 exports.deleteCommentById = (req, res, next) => {
     removeCommentById(req.params.comment_id).then(() => {
         res.status(204).send()
+    }).catch((err) => {
+        next(err)
+    })
+}
+
+exports.getAllEndpoints = (req, res, next) => {
+    selectAllEndpoints()
+    .then((endpoints) => {
+        res.status(200).send({endpoints: JSON.parse(endpoints)})
     }).catch((err) => {
         next(err)
     })

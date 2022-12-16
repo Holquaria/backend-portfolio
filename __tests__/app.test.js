@@ -464,3 +464,16 @@ describe('DELETE /api/comments/:comment_id', () => {
     })
   })
 })
+
+describe("GET /api", () => {
+  test("should respond with a JSON of all available endpoints and a description of their use", () => {
+    return request(app)
+    .get('/api')
+    .expect(200)
+    .then(({ body }) => {
+      const { endpoints } = body
+      console.log(endpoints)
+      expect(endpoints).toBeInstanceOf(Object)
+    })
+  })
+})
