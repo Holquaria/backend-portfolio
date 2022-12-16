@@ -168,3 +168,26 @@ exports.selectAllEndpoints = () => {
     return fs.readFile(`${__dirname}/../endpoints.json`, "utf-8")
 }
 
+exports.selectUserByUsername = (username) => {
+    return db.query(`
+    SELECT * FROM users
+    WHERE username = $1`, [username])
+    .then(({ rows }) => rows[0])
+}
+
+exports.checkUserExists = (username) => {
+    return db
+      .query(
+        `
+      SELECT * FROM users
+      WHERE username = $1`,
+        [username]
+      )
+      .then(({ rowCount }) => {
+        if (rowCount === 0) {
+          return Promise.reject({ status: 404, msg: "user not found" });
+        } else {
+          return true;
+        }
+      });
+  };

@@ -9,7 +9,9 @@ const {
   removeCommentById,
   checkTopicExists,
   selectUsers,
-  selectAllEndpoints
+  selectAllEndpoints,
+  selectUserByUsername,
+  checkUserExists
 } = require("../models/models");
 
 
@@ -97,6 +99,15 @@ exports.getAllEndpoints = (req, res, next) => {
     selectAllEndpoints()
     .then((endpoints) => {
         res.status(200).send({endpoints: JSON.parse(endpoints)})
+    }).catch((err) => {
+        next(err)
+    })
+}
+
+exports.getUserByUsername = (req, res, next) => {
+    Promise.all([checkUserExists(req.params.username), selectUserByUsername(req.params.username)])
+    .then(([err, user]) => {
+        res.status(200).send({ user })
     }).catch((err) => {
         next(err)
     })

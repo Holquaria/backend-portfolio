@@ -472,8 +472,33 @@ describe("GET /api", () => {
     .expect(200)
     .then(({ body }) => {
       const { endpoints } = body
-      console.log(endpoints)
       expect(endpoints).toBeInstanceOf(Object)
+    })
+  })
+})
+
+describe("GET /api/users/:username", () => {
+  test("should respond with a user when given their username", () => {
+    return request(app)
+    .get("/api/users/butter_bridge")
+    .expect(200)
+    .then(({ body }) => {
+      const { user } = body
+      expect(user).toMatchObject({
+        username: "butter_bridge",
+        name: "jonny",
+        avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+      })
+    })
+  })
+  test("should respond with a 404 when the user does not exist", () => {
+    return request(app)
+    .get("/api/users/1")
+    .expect(404)
+    .then(({ body }) => {
+      console.log(body)
+      const { message } = body
+      expect(message).toBe('user not found')
     })
   })
 })
