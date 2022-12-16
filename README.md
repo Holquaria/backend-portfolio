@@ -9,7 +9,7 @@ This project contains a seed function that will seed four databases with news ar
 
 The api then contains various endpoints to query information including all articles, users, comments and topics, as well as articles and comments by ID number, and advanced queries for articles such as sorting by a chosen column or selecting all articles on a given topic.
 
-A summary of the endpoints and their uses can be found in the endpoints.json file and can also be found by sending a get request to /api
+A summary of the endpoints and their uses can be found in the endpoints.json file and can also be found by sending a get request to /api.
 
 ## Cloning and creating a build
 #
