@@ -225,3 +225,23 @@ exports.checkUserExists = (username) => {
         }
       });
   };
+
+  exports.insertArticle = (article) => {
+    const { author, title, body, topic } = article
+    return db.query(`
+    INSERT INTO articles
+    (author, title, body, topic)
+    VALUES
+    ($1, $2, $3, $4)
+    `, [author, title, body, topic])
+    .then(() => {
+        let queryString = `
+        SELECT DISTINCT articles.author, title, articles.article_id, topic, articles.body, articles.created_at, articles.votes, COUNT (comments.article_id) AS comment_count FROM articles
+        LEFT JOIN comments
+        ON articles.article_id = comments.article_id
+        WHERE articles.title = $1
+        GROUP BY articles.author, articles.title, articles.article_id, articles.created_at, articles.votes, comments.article_id
+        ORDER BY articles.created_at DESC`
+        return db.query(queryString, [title])
+    }).then(({ rows }) => rows[0])
+  }

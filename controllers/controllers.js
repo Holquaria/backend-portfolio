@@ -13,7 +13,8 @@ const {
   selectUserByUsername,
   checkUserExists,
   checkCommentExists,
-  updateComment
+  updateComment,
+  insertArticle
 } = require("../models/models");
 
 
@@ -123,5 +124,15 @@ exports.patchCommentById = (req, res, next) => {
       }).catch((err) => {
         next(err);
       });
-  };
+};
+
   
+exports.postArticle = (req, res, next) => {
+    Promise.all([checkUserExists(req.body.author), checkTopicExists(req.body.topic), insertArticle(req.body)])
+      .then(([err, err2, article]) => {
+        res.status(201).send({ article });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  };

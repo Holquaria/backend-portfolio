@@ -518,7 +518,7 @@ describe("PATCH /api/comments/:comment_id", () => {
       votes: 26,
       body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
       article_id: 9
-    })
+      })
     })
   })
   test('will not update a non-existent comment', () => {
@@ -559,6 +559,80 @@ describe("PATCH /api/comments/:comment_id", () => {
     return request(app)
     .patch('/api/comments/5')
     .send(newTitle)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('invalid input in request')
+    })
+  })
+})
+
+describe("POST /api/articles", () => {
+  test("will post a new article with the given body", () => {
+    const newArticle = {
+      author: "butter_bridge",
+      title: "The wonderful world of pugs",
+      body: "Pugs are great, even though they shed hair everywhere",
+      topic: "cats"
+    }
+    return request(app)
+    .post('/api/articles')
+    .send(newArticle)
+    .expect(201)
+    .then(({ body }) => {
+      const { article } = body
+      expect(article).toMatchObject({
+        author: "butter_bridge",
+        title: "The wonderful world of pugs",
+        body: "Pugs are great, even though they shed hair everywhere",
+        topic: "cats",
+        article_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+        comment_count: expect.any(String)
+      })
+    })
+  })
+  test("will not post an article if the username does not exist", () => {
+    const newArticle = {
+      author: "steve_jobs",
+      title: "The wonderful world of pugs",
+      body: "Pugs are great, even though they shed hair everywhere",
+      topic: "cats"
+    }
+    return request(app)
+    .post('/api/articles')
+    .send(newArticle)
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('user not found')
+    })
+  })  
+  test("will not post an article if the topic does not exist", () => {
+    const newArticle = {
+      author: "butter_bridge",
+      title: "The wonderful world of pugs",
+      body: "Pugs are great, even though they shed hair everywhere",
+      topic: "dogs"
+    }
+    return request(app)
+    .post('/api/articles')
+    .send(newArticle)
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('topic not found')
+    })
+  })
+  test("will not post an article the body is invalid", () => {
+    const newArticle = {
+      author: "butter_bridge",
+      topic: "cats"
+    }
+    return request(app)
+    .post('/api/articles')
+    .send(newArticle)
     .expect(400)
     .then(({ body }) => {
       const { message } = body
