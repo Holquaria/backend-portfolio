@@ -162,7 +162,3 @@ exports.removeCommentById = (id) => {
         return rowCount
     })
 }
-      return rows[0];
-    });
-};
-
