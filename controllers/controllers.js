@@ -11,7 +11,9 @@ const {
   selectUsers,
   selectAllEndpoints,
   selectUserByUsername,
-  checkUserExists
+  checkUserExists,
+  checkCommentExists,
+  updateComment
 } = require("../models/models");
 
 
@@ -112,3 +114,14 @@ exports.getUserByUsername = (req, res, next) => {
         next(err)
     })
 }
+
+exports.patchCommentById = (req, res, next) => {
+    const id = req.params.comment_id;
+    Promise.all([checkCommentExists(id), updateComment(id, req.body)])
+      .then(([err, comment]) => {
+        res.status(200).send({ comment });
+      }).catch((err) => {
+        next(err);
+      });
+  };
+  

@@ -496,9 +496,73 @@ describe("GET /api/users/:username", () => {
     .get("/api/users/1")
     .expect(404)
     .then(({ body }) => {
-      console.log(body)
       const { message } = body
       expect(message).toBe('user not found')
+    })
+  })
+})
+
+describe("PATCH /api/comments/:comment_id", () => {
+  test('should update a comment with the votes specified and return the updated comment', () => {
+    const votes = { inc_votes: 10 }
+    return request(app)
+    .patch("/api/comments/1")
+    .send(votes)
+    .expect(200)
+    .then(({ body }) => {
+    const { comment } = body
+    expect(comment).toMatchObject({
+      author: 'butter_bridge',
+      comment_id: 1,
+      created_at: "2020-04-06T12:17:00.000Z",
+      votes: 26,
+      body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      article_id: 9
+    })
+    })
+  })
+  test('will not update a non-existent comment', () => {
+    const votes = { inc_votes: 5 }
+    return request(app)
+    .patch('/api/comments/55')
+    .send(votes)
+    .expect(404)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('comment id not found')
+    })
+  })
+  test('should return a 400 when id is not a valid data type', () => {
+    const votes = { inc_votes: 5 }
+    return request(app)
+    .patch("/api/comments/pug")
+    .send(votes)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body;
+      expect(message).toBe('invalid input data type')
+    });
+  })
+  test('will return a 400 when votes is an invalid input data type', () => {
+    const votes = { inc_votes: 'steve' }
+    return request(app)
+    .patch('/api/comments/5')
+    .send(votes)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('invalid input data type')
+    })
+  })
+  test('will return a 400 when attempting to change any other value', () => {
+    const newTitle = { title: 'steve' }
+    return request(app)
+    .patch('/api/comments/5')
+    .send(newTitle)
+    .expect(400)
+    .then(({ body }) => {
+      const { message } = body
+      expect(message).toBe('invalid input in request')
     })
   })
 })
