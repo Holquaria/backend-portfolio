@@ -167,3 +167,4 @@ exports.removeCommentById = (id) => {
 exports.selectAllEndpoints = () => {
     return fs.readFile(`${__dirname}/../endpoints.json`, "utf-8")
 }
+

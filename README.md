@@ -38,8 +38,14 @@ To run all tests please run the following command
 npm test
 ```
 
+To run the server locally please run the following command
+
+```
+npm start
+```
+
+
 ## Environment Variables
-#
 
 To create environment variables for this project, please make two .env files with the following titles and content
 
