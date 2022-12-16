@@ -38,6 +38,12 @@ To run all tests please run the following command
 npm test
 ```
 
+To run the server locally please run the following command
+
+```
+npm start
+```
+
 
 ## Environment Variables
 
