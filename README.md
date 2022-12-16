@@ -12,7 +12,6 @@ The api then contains various endpoints to query information including all artic
 A summary of the endpoints and their uses can be found in the endpoints.json file and can also be found by sending a get request to /api.
 
 ## Cloning and creating a build
-#
 
 To clone this repository please run the following command
 
@@ -62,7 +61,6 @@ PGDATABASE=nc_news_test
 ```
 
 ## Minimum version information
-#
 
 Node: v19.0.0
 
